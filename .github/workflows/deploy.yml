@@ -1,0 +1,29 @@
+name: Build and Deploy React App on EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: [ec2-reactapp]
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Deploy to NGINX (optional)
+        run: |
+          sudo rm -rf usr/share/nginx/html/*
+          sudo cp -r build/* usr/share/nginx/html/
